@@ -115,35 +115,16 @@ class StandardTests(object):
         print("-----")
 
         passed = True
-        if 2315 <= self.series1_0 <= 2685 and 2315 <= self.series1_1 <= 2685:
+        if (2315 <= self.series1_0 <= 2685 and 2315 <= self.series1_1 <= 2685 
+            and 1114 <= self.series2_0 <= 1386 and 1114 <= self.series2_1 <= 1386 
+            and 527 <= self.series3_0 <= 723 and 527 <= self.series3_1 <= 723 
+            and 240 <= self.series4_0 <= 384 and 240 <= self.series4_1 <= 384 
+            and 103 <= self.series5_0 <= 209 and 103 <= self.series5_1 <= 209 
+            and 103 <= self.series6_0 <= 209 and 103 <= self.series6_1 <= 209):
             passed = True
         else:
             passed = False
-        
-        if 1114 <= self.series2_0 <= 1386 and 1114 <= self.series2_1 <= 1386:
-            passed = True
-        else:
-            passed = False
-       
-        if 527 <= self.series3_0 <= 723 and 2315 <= self.series3_1 <= 2685:
-            passed = True
-        else:
-            passed = False
-        
-        if 240 <= self.series4_0 <= 384 and 240 <= self.series4_1 <= 384:
-            passed = True
-        else:
-            passed = False
-        
-        if 103 <= self.series5_0 <= 209 and 103 <= self.series5_1 <= 209:
-            passed = True
-        else:
-            passed = False
-  
-        if 103 <= self.series6_0 <= 209 and 103 <= self.series6_1 <= 209:
-            passed = True
-        else:
-            passed = False
+
 
         print("Seria 1:")
         print("\t0 - " + str(self.series1_0))

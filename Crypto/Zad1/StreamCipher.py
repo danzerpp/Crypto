@@ -42,6 +42,7 @@ class streamCipher(object):
         for asci in wrap(plainBin,7):
             plainTxt+= chr(int(asci,2))
         print(plainTxt)
+        return plainTxt
 
 
         
