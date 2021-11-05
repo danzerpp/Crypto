@@ -36,8 +36,12 @@
     <Compile Include="Zad2\BlockCipher.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Zad3\RSA.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Zad3\" />
     <Folder Include="Zad2\" />
     <Folder Include="Zad1\" />
   </ItemGroup>

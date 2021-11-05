@@ -4,17 +4,31 @@ import binascii
 from termcolor import colored
 from textwrap import wrap
 import random
-
+from math import ceil
 def pad(m):
     return m+chr(16-len(m)%16)*(16-len(m)%16)
 
 def unpad(ct):
     return ct[:-ord(ct[-1])]
 
-def prepareText(self,text):
-    return str.encode(pad(text))
+def getBits(bytes):
+    outPut =""
+    for b in bytes:
+        outPut+= str(bin(b)[2:]).zfill(8)
+    return outPut
 
-def xorCfb(self,firstBits,secondBits):
+def getBytes(bits):
+    blocks = wrap(bits,8)
+    bytes = []
+    for block in blocks:
+        bytes.append(int(block,2))
+    return bytes
+
+def prepareText(self,text):
+    paddedText = pad(text)
+    return str.encode(paddedText)
+
+def xorOperation(self,firstBits,secondBits):
     outPutBits = ""
     for i in range(0,len(firstBits)):
         outPutBits += str(int(firstBits[i]) ^ int(secondBits[i]))
@@ -74,86 +88,95 @@ class blockCipher(object):
             print("Nie podano wiadomości do szyfrowania!!")
         else :
             self.textToEncrypt = prepareText(self,text)
+
+        self.complement =self.textToEncrypt[len(self.textToEncrypt)-1]
         
         self.cipherText =""
         self.IV = ""
 
         
-        
-        
+    def getPlainBits(self):
+        for i in self.textToEncrypt:
+            print(str(bin(i )[2:]).zfill(8) +" ",end="")  
+        print()
+
+    def getPlainHEX(self):
+        for i in self.textToEncrypt:
+            print(str(hex(i )).lstrip("0x").zfill(2) +" ",end="")  
+        print()
 
     def ecbEncrypt(self):
         if len(self.textToEncrypt) ==0:
             return "Nie podano wiadomości do szyfrowania!"
         cipher = AES.new(self.cipherKey, AES.MODE_ECB)
-        self.cipherText  =cipher.encrypt(self.textToEncrypt)
 
-        self.plainHex =""
-        self.plainBin =""
-
-        self.cipherHex =""
-        self.cipherBin =""
-        count =0
-
-        for x in self.cipherText:
-            self.cipherBin += str(bin(x)[2:]).zfill(8)
-            self.cipherHex += str(format(x,"x").zfill(2))
-        for x in self.textToEncrypt:
-            self.plainBin += str(bin(x)[2:]).zfill(8)
-            self.plainHex += str(format(x,"x").zfill(2))
-
-        self.plainBin = wrap(self.plainBin,128)
-        self.plainHex = wrap(self.plainHex,32)
-
-        self.cipherBin = wrap(self.cipherBin,128)
-        self.cipherHex = wrap(self.cipherHex,32)
-
+        self.cipherArray =[]
+        byteBlocks = list(split(self.textToEncrypt,ceil(len(self.textToEncrypt)/16)))
+        for block in byteBlocks:
+            tempArray=[]
+            for i in cipher.encrypt(block):
+                tempArray.append(i)
+            self.cipherArray.append(tempArray)
 
     def ecbDecrypt(self):
         decipher = AES.new(self.cipherKey, AES.MODE_ECB)
-        dec_msg = decipher.decrypt(bytes(self.cipherText))
-        print(unpad(dec_msg.decode()))
+        decryptedArray=[]
+        for block in  self.cipherArray:
+            diffrence = 16 - len(block) 
+            while len(block)!= 16:
+                block.append(diffrence)
+            for i in decipher.decrypt(bytes(block)):
+                decryptedArray.append(i)
+        string =""
+        for x in decryptedArray:
+            string += chr(x)
+        print(unpad(string))
 
 
     def cbcEncrypt(self):
         if len(self.textToEncrypt) ==0:
             return "Nie podano wiadomości do szyfrowania!"
         generateIV(self)
-        blocks = wrap(self.textToEncrypt.decode(),16)
+        
+        byteBlocks = list(split(self.textToEncrypt,ceil(len(self.textToEncrypt)/16)))
+        
         count =0
         self.cipherArray=[]
         cipher = AES.new(self.cipherKey, AES.MODE_ECB)
-        for block in blocks:
-            toEncrypt = doXorOperation(self,block)
+       
+        for byteBlock in byteBlocks:
+            toEncrypt = xorOperation(self,getBits(byteBlock),self.currentIV)
             tempIV =""
-            for enc in cipher.encrypt(toEncrypt):
-                self.cipherArray.append(enc)
-                tempIV+= str(bin(enc)[2:]).zfill(8)
+            tempArray=[]
+            for enc in cipher.encrypt(bytes(getBytes(toEncrypt))):
+                tempArray.append(enc)
+                tempIV+=  str(bin(enc)[2:]).zfill(8)
+            self.cipherArray.append(tempArray)
             self.currentIV = tempIV
     
     def cbcDecrypt(self):
         self.currentIV = self.IV
         decryptedArray =[]
         decipher = AES.new(self.cipherKey, AES.MODE_ECB)
-        for block in list(split(self.cipherArray,int(len(self.cipherArray)/16))):
-            if len(block) != 16:
-                print("Błąd w cbcDecrypt")
 
+        for block in self.cipherArray:
+            diffrence = 16 - len(block) 
+            while len(block)!= 16:
+                block.append(diffrence)
             tempOut =""
             for enc in decipher.decrypt(bytes(block)):
                 tempOut+= str(bin(enc)[2:]).zfill(8)
 
-            for i in doXorOperation(self,"",tempOut):
+            for i in getBytes(xorOperation(self,tempOut,self.currentIV)):
                 decryptedArray.append(i)
 
             self.currentIV =""
             for i in block:
                 self.currentIV += str(bin(i)[2:]).zfill(8)
-
-        print(unpad(bytes(decryptedArray).decode()))
-
-        #dec_msg = decipher.decrypt(bytes(self.cipherText))
-        #print(unpad(dec_msg.decode()))
+        string =""
+        for x in decryptedArray:
+            string += chr(x)
+        print(unpad(string))
 
     def cfbEncrypt(self):
         if len(self.textToEncrypt) ==0:
@@ -161,6 +184,7 @@ class blockCipher(object):
         generateIV(self)
 
         self.cipherArray=[]
+        a = len(self.textToEncrypt)
         blocks = wrap(self.textToEncrypt.decode(),16)
         
         cipher = AES.new(self.cipherKey, AES.MODE_ECB)
@@ -175,19 +199,24 @@ class blockCipher(object):
             for i in str.encode(block):
                 plainBits+= str(bin(i)[2:]).zfill(8)
 
-            outBits= xorCfb(self,plainBits,cipherBits)
+            outBits= xorOperation(self,plainBits,cipherBits)
             self.currentCfbIV =[]
+            tempArray =[]
             for x in wrap(outBits,8):
-                self.cipherArray.append(int(x,2))
+                tempArray.append(int(x,2))
                 self.currentCfbIV.append(int(x,2))
-        abc = "Stoop"
+            self.cipherArray.append(tempArray)
 
     def cfbDecrypt(self):
         self.currentCfbIV = self.cfbIV
         
         cipher = AES.new(self.cipherKey, AES.MODE_ECB)
         decryptedArray =[]
-        for block in list(split(self.cipherArray,int(len(self.cipherArray)/16))):
+     
+        for block in self.cipherArray:
+            diffrence = 16 - len(block) 
+            while len(block)!= 16:
+                block.append(diffrence)
             cipherBits =""
             blockBits=""
 
@@ -196,12 +225,15 @@ class blockCipher(object):
 
             for i in block:
                 blockBits+= str(bin(i)[2:]).zfill(8)
-            outBits= xorCfb(self,blockBits,cipherBits)
+            outBits= xorOperation(self,blockBits,cipherBits)
             
             for x in wrap(outBits,8):
                 decryptedArray.append(int(x,2))
             self.currentCfbIV = block
-        print(unpad(bytes(decryptedArray).decode()))
+        string =""
+        for x in decryptedArray:
+            string += chr(x)
+        print(unpad(string))
 
 
 
