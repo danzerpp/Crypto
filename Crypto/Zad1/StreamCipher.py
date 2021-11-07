@@ -4,7 +4,7 @@ import Zad1.BBS as gen
 def getBinaryText(self,text):
     binStr =""
     for char in text:
-        binStr = binStr +  str(bin(ord(char))[2:]).zfill(7)
+        binStr = binStr +  str(bin(ord(char))[2:]).zfill(7) #przerabianie string na binary string
     return binStr
 
 def getSi(self,length):

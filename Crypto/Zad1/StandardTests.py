@@ -43,7 +43,7 @@ class StandardTests(object):
                   f.close()
         else:
             self.binStr = binaryString
-
+        print(len(self.binStr))
         if len(self.binStr) < 20000:
             print("Długość ciągu jest za krótka")
         if len(self.binStr) >20000:
