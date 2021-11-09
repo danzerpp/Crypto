@@ -172,66 +172,107 @@ from Crypto.Random import get_random_bytes
 
 #1
 
+#rsa = RSA(p = 1009, q =1103)
+
+#print("Klucz publiczny - "+ str(rsa.e) + ", " + str(rsa.n))
+#print("Klucz prywatny - " +str(rsa.d) + ", " + str(rsa.n))
+
 #plainMessage ="Podstawy kryptografii - Implementacja RSA  11.2021"
-#rsa = RSA()
+
 #rsa.encryptMessage(plainMessage,rsa.e,rsa.n)
-##rsa.printEncryptedMessage()
+
+#print("Wiadomość zaszyfrowana")
+#rsa.printEncryptedMessage()
+
+
+#print("Wiadomość odszyfrowana")
+
+#print("Poniżej odszyfrowana")
 #decryptMessage(rsa.c,rsa.d,rsa.n)
+#print(plainMessage)
+#print("Powyżej wiadomość jawna, przed szyfrowaniem")
 
 #END 1
 
 #2
 
-#zad2Text = "Dwadziescia znakow!!"
+zad2Text = "Dwadziescia znakow!!"
 
-#rsa = RSA() #pierwsza para
-#rsaSecond = RSA() # druga para
+rsaA = RSA(p = 1009, q =1103)
+rsaB = RSA(p = 1093, q =1229) # druga para
 
-#rsa.encryptMessage(zad2Text,rsa.d,rsa.n)
-#rsa.printEncryptedMessage()
-#decryptMessage(rsa.c,rsa.e,rsa.n)
+print("Para kluczy A:")
+print("Klucz publiczny - "+ str(rsaA.e) + ", " + str(rsaA.n))
+print("Klucz prywatny  - " +str(rsaA.d) + ", " + str(rsaA.n))
+print()
 
-#rsaSecond.encryptMessage(zad2Text,rsaSecond.d,rsaSecond.n)
-#rsaSecond.printEncryptedMessage()
-#decryptMessage(rsaSecond.c,rsaSecond.e,rsaSecond.n)
+print("Para kluczy B")
+print("Klucz publiczny - "+ str(rsaB.e) + ", " + str(rsaB.n))
+print("Klucz prywatny  - " +str(rsaB.d) + ", " + str(rsaB.n))
+print()
+
+print("Szyfrowanie kluczem A")
+rsaA.encryptMessage(zad2Text,rsaA.d,rsaA.n)
+print("Wiadomość zaszyfrowana:")
+rsaA.printEncryptedMessage()
+print("Wiadomość odszyfrowana")
+decryptMessage(rsaA.c,rsaA.e,rsaA.n)
+print(zad2Text + "  -- wiadomość przed szyfrowaniem")
+print()
+
+print("Szyfrowanie kluczem B")
+rsaB.encryptMessage(zad2Text,rsaB.d,rsaB.n)
+print("Wiadomość zaszyfrowana:")
+rsaB.printEncryptedMessage()
+print("Wiadomość odszyfrowana")
+decryptMessage(rsaB.c,rsaB.e,rsaB.n)
+print(zad2Text + "  -- wiadomość przed szyfrowaniem")
+print()
+
 
 
 #END 2
 
 #END ZAD 3
            
-#ZAD2           
-message = "Test dla dowolnej wiadomosci o dlugosci co najmniej kilku blokow!!!"
+#ZAD2                                                               
+#message = "lubu dubu, lubu dubu, niech zyje nam prezes naszego klubu! Niech zyje nam! To spiewalem ja - Jarzabek."
 
 
-print("Wiadomość do szyfrowania:")
-print(message)
-print()
+#print("Wiadomość do szyfrowania:")
+#print(message)
+#print()
 
-print("Usunąć cały blok")
-print("Wynik szyfrowania i deszyfrowania trybem ECB:")
-blockA = bc.blockCipher(text =message, key = "xyzW3abdefsykl12")
-blockA.ecbEncrypt()
-blockA.cipherArray.remove(blockA.cipherArray[1])
-blockA.ecbDecrypt()
-print()
+#print("Usunąć cały blok")
+#print("Wynik szyfrowania i deszyfrowania trybem ECB:")
+#blockA = bc.blockCipher(text =message, key = "xyzW3abdefsykl12")
+#blockA.ecbEncrypt()
+#blockA.cipherArray.remove(blockA.cipherArray[1])
+#blockA.ecbDecrypt()
+#print()
 
-print("Wynik szyfrowania i deszyfrowania trybem CBC:")
-blockB = bc.blockCipher(text =message, key = "xyzW3abdefsykl12")
-blockB.cbcEncrypt()
-blockB.cipherArray.remove(blockB.cipherArray[1])
+#print("Wynik szyfrowania i deszyfrowania trybem CBC:")
+#blockB = bc.blockCipher(text =message, key = "xyzW3abdefsykl12")
+#blockB.cbcEncrypt()
+#blockB.cipherArray.remove(blockB.cipherArray[1])
 
-blockB.cbcDecrypt()
-print()
+#blockB.cbcDecrypt()
+#print()
 
 
-print("Wynik szyfrowania i deszyfrowania trybem CFB:")
-blockC = bc.blockCipher(text =message, key = "xyzW3abdefsykl12")
-blockC.cfbEncrypt()
-blockC.cipherArray.remove(blockC.cipherArray[1])
+#print("Wynik szyfrowania i deszyfrowania trybem CFB:")
+#blockC = bc.blockCipher(text =message, key = "xyzW3abdefsykl12")
+#blockC.cfbEncrypt()
+#blockC.cipherArray.remove(blockC.cipherArray[1])
 
-blockC.cfbDecrypt()
-print()
+#blockC.cfbDecrypt()
+#print()
+
+
+
+
+
+
 
 #print("Wiadomość do szyfrowania:")
 #print(message)
@@ -241,21 +282,33 @@ print()
 #print("Wynik szyfrowania i deszyfrowania trybem ECB:")
 #blockA = bc.blockCipher(text =message, key = "xyzW3abdefsykl12")
 #blockA.ecbEncrypt()
-#blockA.cipherArray.insert(2,cipherArray[1])
+#blockA.cipherArray.insert(2,blockA.cipherArray[1])
 #blockA.ecbDecrypt()
 #print()
 
 #print("Wynik szyfrowania i deszyfrowania trybem CBC:")
 #blockB = bc.blockCipher(text =message, key = "xyzW3abdefsykl12")
 #blockB.cbcEncrypt()
-#blockB.cipherArray.insert(2,cipherArray[1])
+#blockB.cipherArray.insert(2,blockB.cipherArray[1])
 
 #blockB.cbcDecrypt()
+#print()
+
+#print("Wynik szyfrowania i deszyfrowania trybem CFB:")
+#blockC = bc.blockCipher(text =message, key = "xyzW3abdefsykl12")
+#blockC.cfbEncrypt()
+#blockC.cipherArray.insert(2,blockC.cipherArray[1])
+
+#blockC.cfbDecrypt()
 #print()
 
 #print("Wiadomość do szyfrowania:")
 #print(message)
 #print()
+
+
+
+
 
 #print("Zamienić bloki miejscami ")
 #print("Wynik szyfrowania i deszyfrowania trybem ECB:")
@@ -291,13 +344,13 @@ print()
 #print()
 
 
-#print("Wynik szyfrowania i deszyfrowania trybem CFB:")
-#blockC = bc.blockCipher(text =message, key = "xyzW3abdefsykl12")
-#blockC.cfbEncrypt()
-#blockC.cipherArray.insert(2,cipherArray[1])
 
-#blockC.cfbDecrypt()
+#print("Wiadomość do szyfrowania:")
+#print(message)
 #print()
+
+
+
 
 #print("Zmiana wartości bajtu")
 #print("Wynik szyfrowania i deszyfrowania trybem ECB:")
@@ -323,6 +376,11 @@ print()
 
 #blockC.cfbDecrypt()
 #print()
+
+
+
+
+
 
 #print("Wiadomość do szyfrowania:")
 #print(message)
@@ -350,7 +408,6 @@ print()
 #blockB.cbcDecrypt()
 #print()
 
-
 #print("Wynik szyfrowania i deszyfrowania trybem CFB:")
 #blockC = bc.blockCipher(text =message, key = "xyzW3abdefsykl12")
 #blockC.cfbEncrypt()
@@ -360,6 +417,10 @@ print()
 #blockC.cipherArray[2][10] = temp1
 #blockC.cfbDecrypt()
 #print()
+
+
+
+
 
 #print("Wiadomość do szyfrowania:")
 #print(message)

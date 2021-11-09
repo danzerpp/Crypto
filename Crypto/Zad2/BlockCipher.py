@@ -92,7 +92,6 @@ class blockCipher(object):
             print("Nie podano wiadomości do szyfrowania!!")
         else :
             self.textToEncrypt = prepareText(self,text) # przygotowanie tekstu do szyfrowania - dopełnienie i zmiana na bajty
-        print(len(self.textToEncrypt))
         self.cipherText =""
         self.IV = ""
 
@@ -113,6 +112,7 @@ class blockCipher(object):
         cipher = AES.new(self.cipherKey, AES.MODE_ECB)
 
         self.cipherArray =[]
+        a= len(self.textToEncrypt)
         byteBlocks = list(split(self.textToEncrypt,ceil(len(self.textToEncrypt)/16))) # dzielę wszystkie bajty na bloki o długości 16
         for block in byteBlocks:
             tempArray=[]
@@ -132,7 +132,10 @@ class blockCipher(object):
         string =""
         for x in decryptedArray: # ponownie generuje tekst jawny z bajtów
             string += chr(x)
-        print(unpad(string)) # zwracam oryginalny tekst
+        if len(unpad(string)) < 16:
+            print(string)
+        else:
+            print(unpad(string)) # zwracam oryginalny tekst
 
 
     def cbcEncrypt(self, IV =""):
@@ -180,7 +183,10 @@ class blockCipher(object):
         string =""
         for x in decryptedArray: # przywracam oryginalny tekst
             string += chr(x)
-        print(unpad(string))
+        if len(unpad(string)) < 16:
+            print(string)
+        else:
+            print(unpad(string))
 
     def cfbEncrypt(self,IV =""): # szyfrownaie CFB
         if len(self.textToEncrypt) ==0:
@@ -240,7 +246,10 @@ class blockCipher(object):
         string =""
         for x in decryptedArray: # przywracamy oryginalny tekst
             string += chr(x)
-        print(unpad(string))
+        if len(unpad(string)) < 16:
+            print(string)
+        else:
+            print(unpad(string))
 
 
 

@@ -31,10 +31,22 @@ def split(a, n):
     k, m = divmod(len(a), n)
     return (a[i*k+min(i, m):(i+1)*k+min(i+1, m)] for i in range(n))
 
+def generatePandQ(self):
+    temp_p = random.randint(100,10000)
+    temp_q = random.randint(100,10000)
+    while temp_p == temp_q or not isPrime(temp_p) or not isPrime(temp_q):
+        temp_p = random.randint(100,10000)
+        temp_q = random.randint(100,10000)
+    self.p = temp_p
+    self.q = temp_q
+
 class RSA(object):
-    def __init__(self,p=1009  ,q=1381 , e =0, d =0):
-        self.p = p
-        self.q = q
+    def __init__(self,p=0  ,q=0 , e =0, d =0):
+        if p == 0 or q ==0 or (p > 9999 or q > 9999 or not isPrime(p) or not isPrime(q)): # sprawdzam, czy użytkownik podał wartości p i q, jeżeli 
+            generatePandQ(self)                       # tak, to upewniam się, że są odpowienie
+        else:
+            self.p = p
+            self.q = q
         self.c =[]
 
         self.n = self.p * self.q
